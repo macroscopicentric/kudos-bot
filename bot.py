@@ -36,4 +36,44 @@ def respond(msg):
 # This is a blocking call that will run forever
 client.call_on_each_message(lambda msg: respond(msg))
 
-#Note to self: example msg in credentials.
+"""
+Example msg:
+
+{
+    "recipient_id": XXXXX,
+    "sender_email": "email@email.com",
+    "timestamp": XXXXXXXXXX,
+    "display_recipient": [
+        {
+            "domain": "students.hackerschool.com",
+            "short_name": "kudos-bot",
+            "email": "kudos-bot@students.hackerschool.com",
+            "full_name": "Kudos Bot",
+            "id": XXXX
+        },
+        {
+            "full_name": "Full Name",
+            "domain": "students.hackerschool.com",
+            "email": "email_username@email.com",
+            "short_name": "email_username",
+            "id": XXXX
+        }
+    ],
+    "sender_id": XXXX,
+    "sender_full_name": "Full Name",
+    "sender_domain": "students.hackerschool.com",
+    "content": "message",
+    "gravatar_hash": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "avatar_url": "https://url.com",
+    "client": "website",
+    "content_type": "text/x-markdown",
+    "subject_links": [],
+    "sender_short_name": "email_username",
+    "type": "private" or "stream",
+    "id": XXXXXXXX,
+    "subject": "topic",
+    ("to": "stream")
+}
+
+("to" isn't included if it's a private message.)
+"""
