@@ -1,22 +1,23 @@
 import zulip
-import json
-import requests
-
 import re
+import logging
+
 from credentials import bot_key, bot_email
 
 client = zulip.Client(email=bot_email,
                       api_key=bot_key)
 
+logging.basicConfig(filename='bot.log', format='%(asctime)s %(message)s', level=logging.INFO)
+
 # call respond function when client interacts with kudos bot
 def respond(msg):
-    print msg
 
     if (msg['sender_email'] != "kudos-bot@students.hackerschool.com"
         and msg['type'] == 'private'):
             
         if re.search(r'@\*\*.+\*\*', msg['content']):
 
+            # logging.info(msg)
             client.send_message({
                 "type": "stream",
                 "subject": "kudos-test",
