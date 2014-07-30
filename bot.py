@@ -4,10 +4,11 @@ import logging
 
 from credentials import bot_key, bot_email
 
-client = zulip.Client(email=bot_email,
-                      api_key=bot_key)
-
-logging.basicConfig(filename='bot.log', format='%(asctime)s %(message)s', level=logging.INFO)
+#Logger is to maintain a record of messages sent to kudos-bot. However, requests (used by zulip) logs HTTPS connection requests at the info level. Filter is to avoid actually logging these.
+class SkipHTTPConnectionsFilter(logging.Filter):
+    def filter(self, record):
+        if 'Starting new HTTPS connection' not in record.getMessage():
+            return record.getMessage()
 
 # call respond function when client interacts with kudos bot
 def respond(msg):
@@ -17,7 +18,7 @@ def respond(msg):
             
         if re.search(r'@\*\*.+\*\*', msg['content']):
 
-            # logging.info(msg)
+            logger.info(msg)
             client.send_message({
                 "type": "stream",
                 "subject": "kudos-test",
@@ -33,9 +34,15 @@ def respond(msg):
                 "content": '''I'm sorry, I only forward messages that @-mention the person you want to give kudos too.'''
             })
 
-
-# This is a blocking call that will run forever
-client.call_on_each_message(lambda msg: respond(msg))
+if __name__ == '__main__':
+    client = zulip.Client(email=bot_email, api_key=bot_key)
+    logger = logging.getLogger(__name__)
+    handler = logging.FileHandler(filename="bot.log")
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
+    # logging.basicConfig(filename='bot.log', format='%(asctime)s %(message)s', level=logging.INFO)
+    # This is a blocking call that will run forever
+    client.call_on_each_message(lambda msg: respond(msg))
 
 """
 Example msg:
