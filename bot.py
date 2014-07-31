@@ -1,5 +1,6 @@
 import zulip
 import os
+import sys
 import re
 import logging
 
@@ -36,8 +37,10 @@ def respond(msg):
 if __name__ == '__main__':
     client = zulip.Client(email=os.environ['bot_email'], api_key=os.environ['bot_key'])
     logger = logging.getLogger(__name__)
-    handler = logging.FileHandler(filename="bot.log")
+    handler = logging.StreamHandler(sys.stdout)
+    formatter = logging.Formatter('%(asctime)s %(message)s')
     logger.addHandler(handler)
+    logger.setFormatter(formatter)
     logger.setLevel(logging.INFO)
     # This is a blocking call that will run forever
     client.call_on_each_message(lambda msg: respond(msg))
