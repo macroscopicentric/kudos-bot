@@ -1,8 +1,7 @@
 import zulip
+import os
 import re
 import logging
-
-from credentials import bot_key, bot_email
 
 #Logger is to maintain a record of messages sent to kudos-bot. However, requests (used by zulip) logs HTTPS connection requests at the info level. Filter is to avoid actually logging these.
 class SkipHTTPConnectionsFilter(logging.Filter):
@@ -35,12 +34,11 @@ def respond(msg):
             })
 
 if __name__ == '__main__':
-    client = zulip.Client(email=bot_email, api_key=bot_key)
+    client = zulip.Client(email=os.environ['bot_email'], api_key=os.environ['bot_key'])
     logger = logging.getLogger(__name__)
     handler = logging.FileHandler(filename="bot.log")
     logger.addHandler(handler)
     logger.setLevel(logging.INFO)
-    # logging.basicConfig(filename='bot.log', format='%(asctime)s %(message)s', level=logging.INFO)
     # This is a blocking call that will run forever
     client.call_on_each_message(lambda msg: respond(msg))
 
