@@ -21,8 +21,8 @@ def respond(msg):
             logger.info(msg)
             client.send_message({
                 "type": "stream",
-                "subject": "kudos-test",
-                "to": "test-bot",
+                "subject": "kudos",
+                "to": "off-topic",
                 "content": "%s" % msg['content']
             })
 
